@@ -3,21 +3,31 @@
 #include <stdio.h>
 #include <time.h>
 #include <graphics.h>
+#undef UNICODE
+#undef _UNICODE
 int length = -1;
 int node_size;
-int *map=NULL;
-int i,j;
+int *map = NULL;
+int i, j;
+int difficulty;
 int trap[4][2];
-
+int win = 0;
 ExMessage m; // 定义消息变量
-typedef struct node
+struct data
 {
     int order;
     int time;
+    int difficulty;
+    int score;
+};
+typedef struct node
+{
+    struct data data;
     struct node *next;
 } NODE;
+NODE *head = NULL;
 
-NODE *winadd(NODE *head, int time)
+NODE *winadd(int time, int score)
 {
 
     NODE *p;
@@ -32,8 +42,10 @@ NODE *winadd(NODE *head, int time)
         if (head == NULL)
         {
             head = p;
-            p->order = 1;
-            p->time = time;
+            p->data.order = 1;
+            p->data.time = time;
+            p->data.difficulty = difficulty;
+            p->data.score = score;
             p->next = NULL;
         }
         else
@@ -45,16 +57,40 @@ NODE *winadd(NODE *head, int time)
                 t = t->next;
                 i++;
             }
-            p->order = i;
-            p->time = time;
-
+            p->data.order = i;
+            p->data.time = time;
+            p->data.difficulty = difficulty;
+            p->data.score = score;
             t->next = p;
             p->next = NULL;
         }
+        printf("win");
+        printf("%d\n", p->data.score);
     }
 
     return head;
 }
+
+int chainsort()
+{
+    struct data tmp;
+    if (head != NULL)
+    {
+        for (NODE *t = head; t->next != NULL; t = t->next)
+        {
+            for (NODE *p = head; p->next != NULL; p = p->next)
+            {
+                if (p->data.score < (p->next)->data.score)
+                {
+                    tmp = p->data;
+                    p->data = p->next->data;
+                    p->next->data = tmp;
+                }
+            }
+        }
+    }
+}
+
 int setsize()
 {
     cleardevice();
@@ -80,10 +116,20 @@ int setsize()
         720 - 250,
     };
     int leng[4] = {7, 15, 31, 51};
+    setlinecolor(BLACK);
     for (int i = 0; i < 4; i++)
     {
         roundrect(size[i][0], size[i][1], size[i][2], size[i][3], 10, 10);
     }
+
+    LOGFONT f;
+    gettextstyle(&f);                      // 获取当前字体设置
+    f.lfHeight = 256;                      // 设置字体高度为 48
+    _tcscpy(f.lfFaceName, _T("Consolas")); // 设置字体为“黑体”(高版本 VC 推荐使用 _tcscpy_s 函数)
+    f.lfQuality = ANTIALIASED_QUALITY;     // 设置输出效果为抗锯齿
+    settextstyle(&f);                      // 设置字体样式
+    settextcolor(BLACK);
+    outtextxy(150, 0, _T("MAZE"));
 
     while (true)
     {
@@ -98,6 +144,7 @@ int setsize()
             {
                 if (m.x >= size[k][0] && m.y >= size[k][1] && m.x <= size[k][2] && m.y <= size[k][3])
                 {
+                    difficulty = k;
                     length = leng[k];
                     node_size = (int)(720.0 / (float)length);
                     return 0;
@@ -109,6 +156,7 @@ int setsize()
         }
     }
 }
+
 int dup(int move[4], int n)
 {
     for (int i = 0; i < 4; i++)
@@ -120,6 +168,7 @@ int dup(int move[4], int n)
     }
     return 0;
 }
+
 int randdig(int move[4])
 {
     int r = 0;
@@ -134,7 +183,7 @@ int randdig(int move[4])
     }
 }
 
-void genpath(int *map, int x, int y)
+int genpath(int x, int y)
 
 {
 
@@ -147,74 +196,49 @@ void genpath(int *map, int x, int y)
         {
             if ((x - 2) > 0 && !*(map + (x - 2) * length + y))
             {
-                *(map + (x - 1) * length + y) = 1, genpath(map, x - 2, y);
+                *(map + (x - 1) * length + y) = 1, genpath(x - 2, y);
             }
         }
         if (move[k] == 1)
         {
             if ((x + 2) < length && !*(map + (x + 2) * length + y))
             {
-                *(map + (x + 1) * length + y) = 1, genpath(map, x + 2, y);
+                *(map + (x + 1) * length + y) = 1, genpath(x + 2, y);
             }
         }
         if (move[k] == 2)
         {
             if ((y - 2) > 0 && !*(map + (x)*length + y - 2))
             {
-                *(map + (x)*length + y - 1) = 1, genpath(map, x, y - 2);
+                *(map + (x)*length + y - 1) = 1, genpath(x, y - 2);
             }
         }
         if (move[k] == 3)
         {
             if ((y + 2) < length && !*(map + (x)*length + y + 2))
             {
-                *(map + (x)*length + y + 1) = 1, genpath(map, x, y + 2);
+                *(map + (x)*length + y + 1) = 1, genpath(x, y + 2);
             }
         }
     }
 }
+
+int resetmap()
+{
+    for (int k = 0; k < length * length; k++)
+    {
+        *(map + k) = 0;
+    }
+    *(map + 1 * length + 0) = 1;
+    *(map + (length - 2) * length + length - 1) = 1;
+    genpath(1, 1);
+}
+
 int pmove(int prei, int prej)
 {
     clearrectangle(prej * node_size, prei * node_size, (prej + 1) * node_size, (prei + 1) * node_size);
-    roundrect(j * node_size + node_size * 0.1, i * node_size + node_size * 0.1, (j + 1) * node_size - node_size * 0.1, (i + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
-}
-int pout(int *map, int i, int j, int win, NODE *head)
-{
-    cleardevice();
-    BeginBatchDraw();
-    for (int x = 0; x < length; x++)
-    {
-        for (int y = 0; y < length; y++)
-        {
-            if (*(map + x * length + y) == 0)
-            {
-                // _cputs("[]");
-
-                fillroundrect(y * node_size + node_size * 0.1, x * node_size + node_size * 0.1, (y + 1) * node_size - node_size * 0.1, (x + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
-            }
-        }
-    }
-    EndBatchDraw();
-
-    // printf("使用小写wasd进行移动\n");
-    // printf("按r刷新地图\n");
-    // printf("按q修改地图大小\n");
-    // printf("按Esc退出\n");
-    // printf("获胜次数: %d\n", win);
-    NODE *t = head;
-    if (t != NULL)
-    {
-        while (1)
-        {
-
-            // printf("第%d次胜利耗时%d秒\n", t->order, t->time);
-            if (t->next == NULL)
-            {
-                break;
-            }
-            t = t->next;
-        }
-    }
+    setfillcolor(BLUE);
+    fillroundrect(j * node_size + node_size * 0.1, i * node_size + node_size * 0.1, (j + 1) * node_size - node_size * 0.1, (i + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
 }
 
 int move(char direction)
@@ -251,17 +275,109 @@ int move(char direction)
     }
 }
 
-int gentrap(int diff){
+int pout()
+{
+    cleardevice();
+    BeginBatchDraw();
+    for (int x = 0; x < length; x++)
+    {
+        for (int y = 0; y < length; y++)
+        {
+            setfillcolor(BLACK);
+            if (*(map + x * length + y) == 0)
+            {
+                fillroundrect(y * node_size + node_size * 0.1, x * node_size + node_size * 0.1, (y + 1) * node_size - node_size * 0.1, (x + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
+            }
+            setfillcolor(RED);
+            for (int k = 0; k < 4; k++)
+            {
+                if (x == trap[k][0] && y == trap[k][1] && x != 0 && y != 0)
+                {
+                    fillroundrect(y * node_size + node_size * 0.1, x * node_size + node_size * 0.1, (y + 1) * node_size - node_size * 0.1, (x + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
+                }
+            }
+        }
+    }
+    EndBatchDraw();
 
+    LOGFONT f;
+    gettextstyle(&f);                  // 获取当前字体设置
+    f.lfHeight = 16;                   // 设置字体高度为 48
+    _tcscpy(f.lfFaceName, _T("黑体")); // 设置字体为“黑体”(高版本 VC 推荐使用 _tcscpy_s 函数)
+    f.lfQuality = ANTIALIASED_QUALITY; // 设置输出效果为抗锯齿
+    settextstyle(&f);                  // 设置字体样式
+    settextcolor(BLACK);
+    outtextxy(800, 0, _T("使用小写wasd进行移动"));
+    outtextxy(800, 20, _T("按r刷新地图"));
+    outtextxy(800, 40, _T("按q修改难度"));
+    outtextxy(800, 60, _T("按Esc退出"));
+    outtextxy(800, 80, _T("获胜次数"));
+    char number[5];
+    sprintf(number, "%d", win);
+    // outtextxy(800,100,number);
+
+    chainsort();
+    NODE *t = head;
+    if (t != NULL)
+    {
+        while (1)
+        {
+
+            // printf("第%d次胜利耗时%d秒\n", t->order, t->time);
+            printf("%d\n", t->data.score);
+            if (t->next == NULL)
+            {
+                break;
+            }
+            t = t->next;
+        }
+    }
 }
 
-int single_game(int win, NODE *head)
+int gentrap()
+{
+    int x, y;
+    for (int k = 0; k < 4; k++)
+    {
+        trap[k][0] = 0;
+        trap[k][1] = 0;
+    }
+    for (int k = 0; k < difficulty; k++)
+    {
+        if (rand() % 10 <= 7)
+        {
+            while (1)
+            {
+                x = (rand() % ((length - 1) / 2)) * 2 + 1;
+                y = (rand() % ((length - 1) / 2)) * 2 + 1;
+                if ((x == 1 && y == 1) || (x == length - 1 && y == length - 1))
+                {
+                    continue;
+                }
+                for (int l = 0; l < 4; l++)
+                {
+                    if (x == trap[l][0] && y == trap[l][1])
+                    {
+                        continue;
+                    }
+                }
+                break;
+            }
+            trap[k][0] = x;
+            trap[k][1] = y;
+        }
+    }
+}
+
+int single_game()
 {
     int st, et;
     int prei, prej;
     st = time(NULL);
-    pout(map, i, j, win, head);
-    pmove( i, j);
+    gentrap();
+
+    pout();
+    pmove(i, j);
     while (1)
     {
         m = getmessage(EX_CHAR);
@@ -280,9 +396,9 @@ int single_game(int win, NODE *head)
             {
                 return -1;
             }
-            printf("%d",length);
-            delete [] map;
-            map=new int [length*length];
+            printf("%d", length);
+            delete[] map;
+            map = new int[length * length];
             break;
         }
         else if (m.ch == 'w' || m.ch == 'a' || m.ch == 's' || m.ch == 'd')
@@ -291,14 +407,27 @@ int single_game(int win, NODE *head)
             prej = j;
             if (move(m.ch))
             {
+                pmove(prei, prej);
+                for (int k = 0; k < 4; k++)
+                {
+                    //踩到陷阱
+                    if (i == trap[k][0] && j == trap[k][1])
+                    {
+                        resetmap();
+                        gentrap();
+                        pout();
+                        pmove(i, j);
+                    }
+                }
+
                 if (i == length - 2 && j == length - 1)
                 {
                     et = time(NULL);
                     win++;
-                    head = winadd(head, (et - st));
+                    int score = (difficulty + 1) * (difficulty + 1) * 100 / (et - st);
+                    head = winadd((et - st), score);
                     break;
                 }
-                pmove(prei, prej);
             }
         }
     }
@@ -307,28 +436,20 @@ int single_game(int win, NODE *head)
 int main()
 {
     initgraph(1080, 720);
+    setbkcolor(RGB(255, 248, 220));
     if (setsize() == -1)
     {
         return 0;
     }
 
-    int win = 0;
-    NODE *head = NULL;
-    map=new int [length*length];
-    // map = (int *)malloc(sizeof(int) * 51 * 51);
+    map = new int[length * length];
+    srand(GetTickCount());
 
     while (1)
     {
-        for (int k = 0; k < length * length; k++)   
-        {
-            *(map + k) = 0;
-        }
-        srand(rand());
-        genpath(map, 1, 1);
+        resetmap();
         i = 1, j = 0;
-        *(map + 1 * length + 0) = 1;
-        *(map + (length - 2) * length + length - 1) = 1;
-        if (single_game(win, head) == -1)
+        if (single_game() == -1)
         {
             break;
         }
