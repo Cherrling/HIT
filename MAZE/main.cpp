@@ -2,7 +2,14 @@
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
+#include <graphics.h>
 int length = -1;
+int node_size;
+int *map=NULL;
+int i,j;
+int trap[4][2];
+
+ExMessage m; // 定义消息变量
 typedef struct node
 {
     int order;
@@ -48,7 +55,60 @@ NODE *winadd(NODE *head, int time)
 
     return head;
 }
+int setsize()
+{
+    cleardevice();
+    int size[4][4] = {
+        150,
+        350,
+        1080 - 750,
+        720 - 250,
+        //
+        350,
+        350,
+        1080 - 550,
+        720 - 250,
+        //
+        550,
+        350,
+        1080 - 350,
+        720 - 250,
+        //
+        750,
+        350,
+        1080 - 150,
+        720 - 250,
+    };
+    int leng[4] = {7, 15, 31, 51};
+    for (int i = 0; i < 4; i++)
+    {
+        roundrect(size[i][0], size[i][1], size[i][2], size[i][3], 10, 10);
+    }
 
+    while (true)
+    {
+
+        // 获取一条鼠标或按键消息
+        m = getmessage(EX_MOUSE | EX_KEY);
+
+        switch (m.message)
+        {
+        case WM_LBUTTONDOWN:
+            for (int k = 0; k < 4; k++)
+            {
+                if (m.x >= size[k][0] && m.y >= size[k][1] && m.x <= size[k][2] && m.y <= size[k][3])
+                {
+                    length = leng[k];
+                    node_size = (int)(720.0 / (float)length);
+                    return 0;
+                }
+            }
+        case WM_KEYDOWN:
+            if (m.vkcode == VK_ESCAPE)
+                return -1; // 按 ESC 键退出程序
+        }
+    }
+}
 int dup(int move[4], int n)
 {
     for (int i = 0; i < 4; i++)
@@ -60,7 +120,7 @@ int dup(int move[4], int n)
     }
     return 0;
 }
-int randmove(int move[4])
+int randdig(int move[4])
 {
     int r = 0;
     for (int i = 0; i < 4;)
@@ -74,92 +134,80 @@ int randmove(int move[4])
     }
 }
 
-void genpath(int *map, int i, int j)
+void genpath(int *map, int x, int y)
+
 {
 
-    *(map + i * length + j) = 1;
+    *(map + x * length + y) = 1;
     int move[4] = {-1, -1, -1, -1};
-    randmove(move);
+    randdig(move);
     for (int k = 0; k < 4; k++)
     {
         if (move[k] == 0)
         {
-            if ((i - 2) > 0 && !*(map + (i - 2) * length + j))
+            if ((x - 2) > 0 && !*(map + (x - 2) * length + y))
             {
-                *(map + (i - 1) * length + j) = 1, genpath(map, i - 2, j);
+                *(map + (x - 1) * length + y) = 1, genpath(map, x - 2, y);
             }
         }
         if (move[k] == 1)
         {
-            if ((i + 2) < length && !*(map + (i + 2) * length + j))
+            if ((x + 2) < length && !*(map + (x + 2) * length + y))
             {
-                *(map + (i + 1) * length + j) = 1, genpath(map, i + 2, j);
+                *(map + (x + 1) * length + y) = 1, genpath(map, x + 2, y);
             }
         }
         if (move[k] == 2)
         {
-            if ((j - 2) > 0 && !*(map + (i)*length + j - 2))
+            if ((y - 2) > 0 && !*(map + (x)*length + y - 2))
             {
-                *(map + (i)*length + j - 1) = 1, genpath(map, i, j - 2);
+                *(map + (x)*length + y - 1) = 1, genpath(map, x, y - 2);
             }
         }
         if (move[k] == 3)
         {
-            if ((j + 2) < length && !*(map + (i)*length + j + 2))
+            if ((y + 2) < length && !*(map + (x)*length + y + 2))
             {
-                *(map + (i)*length + j + 1) = 1, genpath(map, i, j + 2);
+                *(map + (x)*length + y + 1) = 1, genpath(map, x, y + 2);
             }
         }
     }
 }
+int pmove(int prei, int prej)
+{
+    clearrectangle(prej * node_size, prei * node_size, (prej + 1) * node_size, (prei + 1) * node_size);
+    roundrect(j * node_size + node_size * 0.1, i * node_size + node_size * 0.1, (j + 1) * node_size - node_size * 0.1, (i + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
+}
 int pout(int *map, int i, int j, int win, NODE *head)
 {
-    // SetConsoleCursorInfo(GetStdHandle((DWORD)-311), &(CONSOLE_CURSOR_INFO){25});
-
-    // SetConsoleCursorPosition(GetStdHandle((DWORD)-11), (COORD){0});
-
+    cleardevice();
+    BeginBatchDraw();
     for (int x = 0; x < length; x++)
     {
-
         for (int y = 0; y < length; y++)
         {
-            if (x == i && y == j)
-            {
-                // _cputs("<>");
-                SetConsoleTextAttribute(GetStdHandle((DWORD)-11), 79);
-                printf("  ");
-            }
-            else if (*(map + x * length + y) == 0)
+            if (*(map + x * length + y) == 0)
             {
                 // _cputs("[]");
-                // SetConsoleTextAttribute(GetStdHandle((DWORD)-11), 128);
-                SetConsoleTextAttribute(GetStdHandle((DWORD)-11), 7);
-                printf("[]");
-            }
-            else
-            {
-                // _cputs("  ");
-                SetConsoleTextAttribute(GetStdHandle((DWORD)-11), 0);
-                printf("  ");
+
+                fillroundrect(y * node_size + node_size * 0.1, x * node_size + node_size * 0.1, (y + 1) * node_size - node_size * 0.1, (x + 1) * node_size - node_size * 0.1, (float)node_size * 0.4, (float)node_size * 0.4);
             }
         }
-        SetConsoleTextAttribute(GetStdHandle((DWORD)-11), 0);
-        printf("\n");
     }
-    SetConsoleTextAttribute(GetStdHandle((DWORD)-11), 15);
+    EndBatchDraw();
 
-    printf("使用小写wasd进行移动\n");
-    printf("按r刷新地图\n");
-    printf("按q修改地图大小\n");
-    printf("按Esc退出\n");
-    printf("获胜次数: %d\n", win);
+    // printf("使用小写wasd进行移动\n");
+    // printf("按r刷新地图\n");
+    // printf("按q修改地图大小\n");
+    // printf("按Esc退出\n");
+    // printf("获胜次数: %d\n", win);
     NODE *t = head;
     if (t != NULL)
     {
         while (1)
         {
 
-            printf("第%d次胜利耗时%d秒\n", t->order, t->time);
+            // printf("第%d次胜利耗时%d秒\n", t->order, t->time);
             if (t->next == NULL)
             {
                 break;
@@ -168,111 +216,81 @@ int pout(int *map, int i, int j, int win, NODE *head)
         }
     }
 }
-int setsize()
+
+int move(char direction)
+
 {
-    system("cls");
-    while (1)
+    switch (direction)
     {
-        printf("请输入期望的迷宫大小(仅限奇数)\n");
-        printf("按0退出\n");
-        scanf("%d", &length);
-        if (length == 0)
+    case 'w':
+        if (*(map + (i - 1) * length + j) && i - 1 >= 0)
         {
-            return 0;
+            i--;
         }
-        else if (length < 5)
+        return 1;
+    case 'a':
+        if (*(map + i * length + j - 1) && j - 1 >= 0)
         {
-            printf("迷宫太小了\n");
+            j--;
         }
-        else
+        return 1;
+    case 's':
+        if (*(map + (i + 1) * length + j) && i + 1 < length)
         {
-            if (length % 2 == 0)
-            {
-                length++;
-            }
-            system("cls");
-            break;
+            i++;
         }
+        return 1;
+    case 'd':
+        if (*(map + i * length + j + 1) && j + 1 < length)
+        {
+            j++;
+        }
+        return 1;
+    default:
+        return 0;
     }
 }
 
-int main()
+int gentrap(int diff){
+
+}
+
+int single_game(int win, NODE *head)
 {
-    setsize();
-    // system("mode con cols=%d lines=%d",length*2+1,length+10);
-
-    int win = 0;
     int st, et;
-    NODE *head = NULL;
-    int *map;
-    map = (int *)malloc(sizeof(int) * length * length);
-
+    int prei, prej;
+    st = time(NULL);
+    pout(map, i, j, win, head);
+    pmove( i, j);
     while (1)
     {
-        for (int i = 0; i < length * length; i++)
+        m = getmessage(EX_CHAR);
+        flushmessage();
+        if (m.vkcode == VK_ESCAPE)
         {
-            *(map + i) = 0;
+            return -1; // 按 ESC 键退出程序
         }
-        srand(rand());
-        int ch = 0;
-        int i = 1, j = 0;
-        st = time(NULL);
-        genpath(map, 1, 1);
-        *(map + 1 * length + 0) = 1;
-        *(map + (length - 2) * length + length - 1) = 1;
-
-        pout(map, i, j, win, head);
-        for (;;)
+        else if (m.ch == 'r')
         {
-            ch = _getch();
-            if (ch == 27)
+            break;
+        }
+        else if (m.ch == 'q')
+        {
+            if (setsize() == -1)
             {
-                return 0;
+                return -1;
             }
-            else if (ch == 'r')
+            printf("%d",length);
+            delete [] map;
+            map=new int [length*length];
+            break;
+        }
+        else if (m.ch == 'w' || m.ch == 'a' || m.ch == 's' || m.ch == 'd')
+        {
+            prei = i;
+            prej = j;
+            if (move(m.ch))
             {
-                break;
-            }
-            else if (ch == 'q')
-            {
-                setsize();
-                free(map);
-                map = (int *)malloc(sizeof(int) * length * length);
-
-                break;
-            }
-            else
-            {
-                switch (ch)
-                {
-                case 'w':
-                    if (*(map + (i - 1) * length + j) && i - 1 >= 0)
-                    {
-                        i--;
-                    }
-                    break;
-                case 'a':
-                    if (*(map + (i)*length + j - 1) && j - 1 >= 0)
-                    {
-                        j--;
-                    }
-                    break;
-                case 's':
-                    if (*(map + (i + 1) * length + j) && i + 1 < length)
-                    {
-                        i++;
-                    }
-                    break;
-                case 'd':
-                    if (*(map + (i)*length + j + 1) && j + 1 < length)
-                    {
-                        j++;
-                    }
-                    break;
-                default:
-                    break;
-                }
-                pout(map, i, j, win, head);
                 if (i == length - 2 && j == length - 1)
                 {
                     et = time(NULL);
@@ -280,7 +298,39 @@ int main()
                     head = winadd(head, (et - st));
                     break;
                 }
+                pmove(prei, prej);
             }
+        }
+    }
+    return 0;
+}
+int main()
+{
+    initgraph(1080, 720);
+    if (setsize() == -1)
+    {
+        return 0;
+    }
+
+    int win = 0;
+    NODE *head = NULL;
+    map=new int [length*length];
+    // map = (int *)malloc(sizeof(int) * 51 * 51);
+
+    while (1)
+    {
+        for (int k = 0; k < length * length; k++)   
+        {
+            *(map + k) = 0;
+        }
+        srand(rand());
+        genpath(map, 1, 1);
+        i = 1, j = 0;
+        *(map + 1 * length + 0) = 1;
+        *(map + (length - 2) * length + length - 1) = 1;
+        if (single_game(win, head) == -1)
+        {
+            break;
         }
     }
     free(map);
