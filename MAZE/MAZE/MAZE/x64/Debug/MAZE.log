@@ -1,0 +1,41 @@
+﻿  源.cpp
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(249,204): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(249,180): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(249,144): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(249,105): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(249,66): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(249,33): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(307,220): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(307,196): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(307,160): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(307,121): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(307,82): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(307,49): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(316,220): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(316,196): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(316,160): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(316,121): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(316,82): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(316,49): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(330,52): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(330,42): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(334,52): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(334,42): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(340,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(345,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(358,13): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(367,13): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(369,13): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(371,13): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(372,13): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(373,13): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(375,13): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(376,13): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(553,51): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(551,25): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(579,20): warning C4477: “fprintf”: 格式字符串“%f”需要类型“double”的参数，但可变参数 2 拥有了类型“int”
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(570,16): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(573,9): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(578,20): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Code\HIT\MAZE\MAZE\MAZE\源.cpp(600,20): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  MAZE.vcxproj -> C:\Code\HIT\MAZE\MAZE\x64\Debug\MAZE.exe

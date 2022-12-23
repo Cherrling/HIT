@@ -3,11 +3,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <graphics.h>
-#undef UNICODE
-#undef _UNICODE
 int length = -1;
 int node_size;
-int *map = NULL;
+int* map = NULL;
 int i, j;
 int difficulty;
 int trap[4][2];
@@ -23,16 +21,16 @@ struct data
 typedef struct node
 {
     struct data data;
-    struct node *next;
+    struct node* next;
 } NODE;
-NODE *head = NULL;
+NODE* head = NULL;
 
-NODE *winadd(int time, int score)
+NODE* winadd(int time, int score)
 {
 
-    NODE *p;
+    NODE* p;
 
-    p = (NODE *)malloc(sizeof(NODE));
+    p = (NODE*)malloc(sizeof(NODE));
     if (p == NULL)
     {
         exit(0);
@@ -50,7 +48,7 @@ NODE *winadd(int time, int score)
         }
         else
         {
-            NODE *t = head;
+            NODE* t = head;
             int i = 2;
             for (; t->next != NULL;)
             {
@@ -71,14 +69,14 @@ NODE *winadd(int time, int score)
     return head;
 }
 
-int chainsort()
+void chainsort()
 {
     struct data tmp;
     if (head != NULL)
     {
-        for (NODE *t = head; t->next != NULL; t = t->next)
+        for (NODE* t = head; t->next != NULL; t = t->next)
         {
-            for (NODE *p = head; p->next != NULL; p = p->next)
+            for (NODE* p = head; p->next != NULL; p = p->next)
             {
                 if (p->data.score < (p->next)->data.score)
                 {
@@ -115,7 +113,7 @@ int setsize()
         1080 - 150,
         720 - 250,
     };
-    int leng[4] = {7, 15, 31, 51};
+    int leng[4] = { 7, 15, 31, 51 };
     setlinecolor(BLACK);
     for (int i = 0; i < 4; i++)
     {
@@ -169,7 +167,7 @@ int dup(int move[4], int n)
     return 0;
 }
 
-int randdig(int move[4])
+void randdig(int move[4])
 {
     int r = 0;
     for (int i = 0; i < 4;)
@@ -183,12 +181,11 @@ int randdig(int move[4])
     }
 }
 
-int genpath(int x, int y)
-
+void genpath(int x, int y)
 {
 
     *(map + x * length + y) = 1;
-    int move[4] = {-1, -1, -1, -1};
+    int move[4] = { -1, -1, -1, -1 };
     randdig(move);
     for (int k = 0; k < 4; k++)
     {
@@ -223,7 +220,7 @@ int genpath(int x, int y)
     }
 }
 
-int resetmap()
+void resetmap()
 {
     for (int k = 0; k < length * length; k++)
     {
@@ -234,7 +231,7 @@ int resetmap()
     genpath(1, 1);
 }
 
-int pmove(int prei, int prej)
+void pmove(int prei, int prej)
 {
     clearrectangle(prej * node_size, prei * node_size, (prej + 1) * node_size, (prei + 1) * node_size);
     setfillcolor(BLUE);
@@ -275,7 +272,7 @@ int move(char direction)
     }
 }
 
-int pout()
+void pout()
 {
     cleardevice();
     BeginBatchDraw();
@@ -298,32 +295,50 @@ int pout()
             }
         }
     }
-    EndBatchDraw();
 
-    LOGFONT f;
-    gettextstyle(&f);                  // 获取当前字体设置
-    f.lfHeight = 16;                   // 设置字体高度为 48
-    _tcscpy(f.lfFaceName, _T("黑体")); // 设置字体为“黑体”(高版本 VC 推荐使用 _tcscpy_s 函数)
-    f.lfQuality = ANTIALIASED_QUALITY; // 设置输出效果为抗锯齿
-    settextstyle(&f);                  // 设置字体样式
+
+    settextstyle(24, 0, "Consolas", 0, 0, 700, false, false, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, DEFAULT_PITCH);                 // 设置字体样式
     settextcolor(BLACK);
-    outtextxy(800, 0, _T("使用小写wasd进行移动"));
-    outtextxy(800, 20, _T("按r刷新地图"));
-    outtextxy(800, 40, _T("按q修改难度"));
-    outtextxy(800, 60, _T("按Esc退出"));
-    outtextxy(800, 80, _T("获胜次数"));
+    outtextxy(750, 0, _T("使用小写wasd进行移动"));
+    outtextxy(750, 25, _T("按r刷新地图"));
+    outtextxy(750, 50, _T("按q修改难度"));
+    outtextxy(750, 75, _T("按Esc退出"));
+    outtextxy(750, 100, _T("获胜次数"));
     char number[5];
+    char sen[100];
     sprintf(number, "%d", win);
-    // outtextxy(800,100,number);
+    // outtextxy(850,100,number);
 
     chainsort();
-    NODE *t = head;
+    NODE* t = head;
+    int num = 1;
     if (t != NULL)
     {
         while (1)
         {
+            strcat(sen, "第");
 
-            // printf("第%d次胜利耗时%d秒\n", t->order, t->time);
+            sprintf(number, "%d", t->data.order);
+            strcat(sen, number);
+
+            strcat(sen, "次在难度");
+
+            sprintf(number, "%d", t->data.difficulty);
+            strcat(sen, number);
+
+            strcat(sen, "下耗时");
+
+
+            sprintf(number, "%d", t->data.time);
+            strcat(sen, number);
+            strcat(sen, "秒，积分");
+
+            sprintf(number, "%d", t->data.score);
+            strcat(sen, number);
+
+            //outtextxy(750, 100 + 25 * num, sen);
+            printf("%s",sen);
+
             printf("%d\n", t->data.score);
             if (t->next == NULL)
             {
@@ -332,9 +347,10 @@ int pout()
             t = t->next;
         }
     }
+    EndBatchDraw();
 }
 
-int gentrap()
+void gentrap()
 {
     int x, y;
     for (int k = 0; k < 4; k++)

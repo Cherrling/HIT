@@ -16,34 +16,51 @@
 // 说明:基线情况为n=0和n=1
 
 #include <stdio.h>
-int count;
+// int count;
+// int main()
+// {
+//     int n;
+//     printf("Input n:");
+//     scanf("%d", &n);
+//     int num;
+//     for (int i = 0; i < n; i++)
+//     {
+//         count = 0;
+//         num=F(i+1);
+//         printf("Fib(%d)=%d, count=%d\n", i + 1, num, count);
+//     }
+// }
+
+// int F(int n)
+// {
+//     count++;
+//     if (n == 0)
+//     {
+//         return 0;
+//     }
+//     else if (n == 1)
+//     {
+//         return 1;
+//     }
+//     else
+//     {
+//         return F(n - 1) + F(n - 2);
+//     }
+// }
+
 int main()
 {
-    int n;
-    printf("Input n:");
-    scanf("%d", &n);
-    int num;
-    for (int i = 0; i < n; i++)
+    int f1 = 1;
+    int f2 = 1;
+    int f3 = 1;
+    int num=0;
+    num+=f1;
+    num+=f2;
+    for (int i = 0; i < 18; i++)
     {
-        count = 0;
-        num=F(i+1);
-        printf("Fib(%d)=%d, count=%d\n", i + 1, num, count);
-    }
-}
-
-int F(int n)
-{
-    count++;
-    if (n == 0)
-    {
-        return 0;
-    }
-    else if (n == 1)
-    {
-        return 1;
-    }
-    else
-    {
-        return F(n - 1) + F(n - 2);
+        f3 = f1 + f2;
+        f1 = f2;
+        f2 = f3;
+        num+=f3
     }
 }
