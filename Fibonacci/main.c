@@ -61,6 +61,6 @@ int main()
         f3 = f1 + f2;
         f1 = f2;
         f2 = f3;
-        num+=f3
+        num+=f3;
     }
 }

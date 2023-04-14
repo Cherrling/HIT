@@ -9,7 +9,7 @@
             "${file}",
             "-o",
             "${fileDirname}\\${fileBasenameNoExtension}.exe",
-            "-leasyx"
+            // "-leasyx"
         ],
         "options": {
             "cwd": "${fileDirname}"
