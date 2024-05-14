@@ -9,7 +9,7 @@ typedef struct list
 
 LIST *Build()
 {
-    int n;
+
     LIST *prePt, *Pt, *head;
 
     for (int i = 0; i < 6; i++)
@@ -39,11 +39,26 @@ LIST *Build()
 
 void print(LIST *head)
 {
+    // LIST *p = head;
+    // for (int i = 0; i < 6; i++)
+    // {
+    //     printf("%d ", p->adj);
+    //     p = p->next;
+    // }
+
+
     LIST *p = head;
-    for (int i = 0; i < 6; i++)
+    for (;;)
     {
         printf("%d ", p->adj);
-        p = p->next;
+        if (p->next==NULL)
+        {
+            return 0;
+        }
+        else
+        {
+            p = p->next;
+        }
     }
 }
 int main()

@@ -2,8 +2,10 @@
 // **输入提示信息**："Please input a low-case letter from keyboard:"
 // **输入数据格式**："%c"
 // **输出数据格式**："The capital letter and its ASCII value are:%c and %d.\n"
-// "
+
 // 提示：从键盘输入一个字符可用scanf也可用getchar
+
+
 #include<stdio.h>
 
 
@@ -14,4 +16,5 @@ int main(){
     printf("The capital letter and its ASCII value are:%c and %d.\n",ch-32,ch-32);
     return 0;
     
+
 }

@@ -8,16 +8,18 @@
 
 int main(){
 
-    for (int i = 0; i < 1001; i++)
+    for (int i = 100; i < 1001; i++)
     {
         if (i%4==2&&i%7==3&&i%9==5)
         {
             /* code */
             printf("%d",i);
-            return 0;
+            // return 0;
+            break;
         }
         
     }
     
+    return 0;
     
 }

@@ -13,7 +13,6 @@ int main(){
 }
 int move(int n,char a,char b){
     printf("Move %d from %c to %c \n",n,a,b);
-    num+=1;
     return 0;
 }
 int hanoi(int n,char a,char b, char c){
