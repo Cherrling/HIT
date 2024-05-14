@@ -1,24 +1,98 @@
 #include <stdio.h>
-#include <stdlib.h>//分配动态数组地址空间所需头文件
-void main()
-{
-	int i;
-	int size;
-	int *arry;
-	printf("输入数组长度：");
-	scanf("%d",&size);
-	arry=(int *)malloc(size*sizeof(int));
-	//利用void* malloc (size_t size)函数分配数组地址空间大小，以字节为单位
+#include <string.h>
+#include <ctype.h>
+int IsNumIn(char word[]);
+int IsSpcIn(char word[]);
+void Trim(char oldWord[], char newWord[]);
+void Seg(char words[], char wArray[][100]);
 
-	for(i=0;i<size;i++)
-	{
-		arry[i]=i;
-		//*(arry+i)=i;//指针型数据指引
-	}
-	for(i=0;i<size;i++)
-	{
-		printf("%d\r\n",*(arry+i));//使用指针引导数据
-		//printf("%d\r\n",arry[i]);
-	}
-	free(arry);//不使用数组后，利用void free (void* ptr)函数释放动态数组存储区
+int main()
+{
+    char str[100], a[100], array[10][100]={"-1"};
+    gets(str);
+    Trim(str, a);
+
+    int i;
+    // for (i = 0; a[i] != '\0'; i++)
+    // {
+        if (IsNumIn(a))
+        {
+            printf("error");
+        }
+        else
+        {
+            if (IsSpcIn(a))
+            {
+                Seg(a, array);    
+                // for (i = 0; i < 100; i++)
+                // {
+                //     puts(array[i]);
+                // }                
+                for (i = 0; array[i][0]!='\0'; i++)
+                {
+                    puts(array[i]);
+                }
+            }
+            else
+                puts(a);
+        }
+    // }
+    return 0;
+}
+
+int IsNumIn(char word[])
+{
+    int i;
+    for (i = 0; *(word + i) != '\0'; i++)
+    {
+        if (isdigit(*(word + i)))
+            return 1;
+    }
+    return 0;
+}
+int IsSpcIn(char word[])
+{
+    int i;
+    for (i = 0; *(word + i) != '\0'; i++)
+    {
+        if (isspace(*(word + i)))
+            return 1;
+    }
+    return 0;
+}
+void Trim(char oldWord[], char newWord[])
+{
+    int i = 0, j = 0;
+    while (*(oldWord + i) == ' ')
+        i++;
+    while (*(oldWord + i) != '\0')
+    {
+        *(newWord + j) = *(oldWord + i);
+        i++;
+        j++;
+    }
+    i--;
+    j--;
+    for (; *(oldWord + i) == ' '; i--, j--)
+    {
+        *(newWord + j) = '\0';
+    }
+}
+void Seg(char words[], char wArray[][100])
+{
+    int i = 0, j = 0, k = 0;
+    for (i = 0; words[i] != '\0'; i++)
+    {
+        if (words[i] >= 'a' && words[i] <= 'z')
+        {
+            wArray[j][k] = *(words + i);
+            k++;
+        }
+        else
+        {
+            wArray[j][k] = '\0';
+            j++;
+            k = 0;
+        }
+    }
 }
